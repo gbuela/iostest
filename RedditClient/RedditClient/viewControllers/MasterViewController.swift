@@ -17,6 +17,16 @@ class MasterViewController: UIViewController, UISplitViewControllerDelegate {
         navigationItem.title = "Reddit Posts"
         splitViewController?.preferredDisplayMode = .allVisible
         splitViewController?.delegate = self
+        
+        Networking.execute(api: RedditAPI.top) { result in
+            // FIXME: implement
+            switch result {
+            case .success(let data):
+                print("received data")
+            case .failure(let error):
+                print("error")
+            }
+        }
     }
 
 
