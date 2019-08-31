@@ -27,24 +27,40 @@ class RedditClientManager {
     private(set) var posts: [Post] = []
     
     var nextPageAvailable: Bool {
-        return true // FIXME: implement
+        return nextPageId != nil && posts.count < maxPosts
     }
     
     func fetch(type: FetchType, completion: @escaping FetchCompletion) {
         guard let api = api(fetchType: type) else {
-            completion(.failure(FetchError(message: "Something failed")))
+            DispatchQueue.main.async {
+                completion(.failure(FetchError(message: "Something failed")))
+            }
             return
         }
         Networking.execute(api: api) { result in
             switch result {
             case .failure(let error):
-                completion(.failure(error))
+                DispatchQueue.main.async {
+                    completion(.failure(error))
+                }
             case .success(let any):
                 if let data = any as? Data,
                     let response = try? JSONDecoder().decode(ResponseModel.self, from: data) {
-                    completion(.success(response))
+                    self.nextPageId = response.data.after
+                    let responsePosts = response.data.children.map { $0.data }
+                    switch type {
+                    case .top:
+                        self.posts = responsePosts
+                    case .next:
+                        self.posts += responsePosts
+                    }
+                    DispatchQueue.main.async {
+                        completion(.success(response))
+                    }
                 } else {
-                    completion(.failure(FetchError(message: "Unknown reponse")))
+                    DispatchQueue.main.async {
+                        completion(.failure(FetchError(message: "Unknown reponse")))
+                    }
                 }
             }
         }

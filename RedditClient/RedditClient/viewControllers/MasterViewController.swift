@@ -22,8 +22,8 @@ class MasterViewController: UIViewController, UISplitViewControllerDelegate {
         
         manager.fetch(type: .top) { result in
             switch result {
-            case .success(let responseModel):
-                self.alert(text: responseModel.data.children[0].data.title)
+            case .success(_):
+                self.tableView.reloadData()
             case .failure(let error):
                 self.alert(text: error.localizedDescription)
             }
@@ -31,10 +31,8 @@ class MasterViewController: UIViewController, UISplitViewControllerDelegate {
     }
 
     private func alert(text: String) {
-        DispatchQueue.main.async {
-            let alertController = UIAlertController(title: nil, message: text, preferredStyle: .alert)
-            self.present(alertController, animated: true, completion: nil)
-        }
+        let alertController = UIAlertController(title: nil, message: text, preferredStyle: .alert)
+        self.present(alertController, animated: true, completion: nil)
     }
 
     @IBAction private func dismissAllTapped() {
@@ -51,13 +49,13 @@ class MasterViewController: UIViewController, UISplitViewControllerDelegate {
 
 extension MasterViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1 // FIXME: implement
+        return manager.posts.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         // FIXME: implement
         let cell = UITableViewCell()
-        cell.textLabel?.text = "test cell"
+        cell.textLabel?.text = manager.posts[indexPath.row].title
         return cell
     }
 }
