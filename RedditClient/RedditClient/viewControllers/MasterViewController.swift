@@ -13,7 +13,8 @@ class MasterViewController: UIViewController, UISplitViewControllerDelegate {
     @IBOutlet private weak var tableView: UITableView!
     
     private let manager = RedditClientManager()
-
+    private var fetchingNext = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = "Reddit Posts"
@@ -21,12 +22,16 @@ class MasterViewController: UIViewController, UISplitViewControllerDelegate {
         splitViewController?.delegate = self
         
         manager.fetch(type: .top) { result in
-            switch result {
-            case .success(_):
-                self.tableView.reloadData()
-            case .failure(let error):
-                self.alert(text: error.localizedDescription)
-            }
+            self.reloadData(result: result)
+        }
+    }
+    
+    private func reloadData(result: Result<ResponseModel,Error>) {
+        switch result {
+        case .success(_):
+            tableView.reloadData()
+        case .failure(let error):
+            alert(text: error.localizedDescription)
         }
     }
 
@@ -49,6 +54,7 @@ class MasterViewController: UIViewController, UISplitViewControllerDelegate {
 
 extension MasterViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        print("CURRENT POST COUNT \(manager.posts.count)")
         return manager.posts.count
     }
     
@@ -65,6 +71,19 @@ extension MasterViewController: UITableViewDataSource {
 extension MasterViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         performSegue(withIdentifier: "showDetail", sender: tableView)
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        guard !fetchingNext else { return }
+        let offset = (scrollView.contentOffset.y - (scrollView.contentSize.height - scrollView.frame.size.height))
+        
+        if offset >= 0 && offset <= 25 {
+            fetchingNext = true
+            manager.fetch(type: .next) { result in
+                self.fetchingNext = false
+                self.reloadData(result: result)
+            }
+        }
     }
 }
 

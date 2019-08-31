@@ -33,6 +33,7 @@ struct Networking {
             completion(.success(data))
         }
         
+        print("REQUESTING \(request.url?.absoluteString ?? "")")
         task.resume()
         session.finishTasksAndInvalidate()
     }

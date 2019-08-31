@@ -8,7 +8,7 @@
 
 import Foundation
 
-fileprivate let baseUrl = "https://www.reddit.com/top.json?limit=50"
+fileprivate let baseUrl = "https://www.reddit.com/top.json?limit=30"
 
 enum RedditAPI {
     case top

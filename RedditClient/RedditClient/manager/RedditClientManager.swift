@@ -32,11 +32,9 @@ class RedditClientManager {
     
     func fetch(type: FetchType, completion: @escaping FetchCompletion) {
         guard let api = api(fetchType: type) else {
-            DispatchQueue.main.async {
-                completion(.failure(FetchError(message: "Something failed")))
-            }
             return
         }
+        print("FETCHING \(type)")
         Networking.execute(api: api) { result in
             switch result {
             case .failure(let error):
@@ -53,6 +51,9 @@ class RedditClientManager {
                         self.posts = responsePosts
                     case .next:
                         self.posts += responsePosts
+                    }
+                    if self.posts.count > self.maxPosts {
+                        self.posts = Array(self.posts.prefix(upTo: self.maxPosts))
                     }
                     DispatchQueue.main.async {
                         completion(.success(response))
