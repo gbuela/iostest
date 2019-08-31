@@ -1,5 +1,5 @@
 //
-//  ListingData.swift
+//  PostData.swift
 //  RedditClient
 //
 //  Created by German Buela on 31/08/2019.
@@ -8,7 +8,6 @@
 
 import Foundation
 
-struct ListingData: Decodable {
-    let after: String
-    let children: [PostData]
+struct PostData: Decodable {
+    let data: Post
 }

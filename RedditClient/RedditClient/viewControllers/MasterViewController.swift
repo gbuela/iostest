@@ -11,6 +11,8 @@ import UIKit
 class MasterViewController: UIViewController, UISplitViewControllerDelegate {
     
     @IBOutlet private weak var tableView: UITableView!
+    
+    private let manager = RedditClientManager()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -18,17 +20,22 @@ class MasterViewController: UIViewController, UISplitViewControllerDelegate {
         splitViewController?.preferredDisplayMode = .allVisible
         splitViewController?.delegate = self
         
-        Networking.execute(api: RedditAPI.top) { result in
-            // FIXME: implement
+        manager.fetch(type: .top) { result in
             switch result {
-            case .success(let data):
-                print("received data")
+            case .success(let responseModel):
+                self.alert(text: responseModel.data.children[0].data.title)
             case .failure(let error):
-                print("error")
+                self.alert(text: error.localizedDescription)
             }
         }
     }
 
+    private func alert(text: String) {
+        DispatchQueue.main.async {
+            let alertController = UIAlertController(title: nil, message: text, preferredStyle: .alert)
+            self.present(alertController, animated: true, completion: nil)
+        }
+    }
 
     @IBAction private func dismissAllTapped() {
         print("dismissAllTapped") // FIXME: implement

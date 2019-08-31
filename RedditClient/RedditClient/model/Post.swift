@@ -14,9 +14,9 @@ struct Post: Decodable {
     let title: String
     let author: String
     let numComments: Int
-    let thumbnailUrl: String
-    let thumbnailHeight: Int
-    let thumbnailWidth: Int
+    let thumbnailUrl: String?
+    let thumbnailHeight: Int?
+    let thumbnailWidth: Int?
     
     enum CodingKeys: String, CodingKey {
         case name
@@ -24,7 +24,7 @@ struct Post: Decodable {
         case title
         case author
         case numComments = "num_comments"
-        case thumbnailUrl = "thumbnail_url"
+        case thumbnailUrl = "thumbnail"
         case thumbnailHeight = "thumbnail_height"
         case thumbnailWidth = "thumbnail_width"
     }

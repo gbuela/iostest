@@ -29,6 +29,8 @@ extension RedditAPI: API {
         guard let url = URL(string: baseUrl + "&" + (query ?? "")) else {
             return nil
         }
-        return URLRequest(url: url)
+        var request = URLRequest(url: url)
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        return request
     }
 }
