@@ -93,12 +93,6 @@ extension MasterViewController: UITableViewDataSource {
 }
 
 extension MasterViewController: UITableViewDelegate {
-    // TODO: not performing segue automatically from storyboard connection
-    // find out why and remove this
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        performSegue(withIdentifier: "showDetail", sender: tableView)
-    }
-    
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         guard !fetchingNext else { return }
         let offset = (scrollView.contentOffset.y - (scrollView.contentSize.height - scrollView.frame.size.height))
