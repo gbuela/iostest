@@ -21,6 +21,7 @@
 		A97FB834231AD0DD00847EE2 /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97FB833231AD0DD00847EE2 /* API.swift */; };
 		A97FB837231ADBE000847EE2 /* RedditClientManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97FB836231ADBE000847EE2 /* RedditClientManager.swift */; };
 		A97FB839231AE4C700847EE2 /* PostData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97FB838231AE4C700847EE2 /* PostData.swift */; };
+		A97FB85C231C3CF100847EE2 /* UIViewController+SimpleAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97FB85B231C3CF100847EE2 /* UIViewController+SimpleAlert.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,6 +41,7 @@
 		A97FB833231AD0DD00847EE2 /* API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
 		A97FB836231ADBE000847EE2 /* RedditClientManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RedditClientManager.swift; sourceTree = "<group>"; };
 		A97FB838231AE4C700847EE2 /* PostData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostData.swift; sourceTree = "<group>"; };
+		A97FB85B231C3CF100847EE2 /* UIViewController+SimpleAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+SimpleAlert.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,6 +74,7 @@
 		A97FB811231ABEFF00847EE2 /* RedditClient */ = {
 			isa = PBXGroup;
 			children = (
+				A97FB85A231C3CCA00847EE2 /* utilities */,
 				A97FB835231ADB6B00847EE2 /* manager */,
 				A97FB82E231AD00500847EE2 /* network */,
 				A97FB827231ACE1B00847EE2 /* model */,
@@ -121,6 +124,14 @@
 				A97FB836231ADBE000847EE2 /* RedditClientManager.swift */,
 			);
 			path = manager;
+			sourceTree = "<group>";
+		};
+		A97FB85A231C3CCA00847EE2 /* utilities */ = {
+			isa = PBXGroup;
+			children = (
+				A97FB85B231C3CF100847EE2 /* UIViewController+SimpleAlert.swift */,
+			);
+			path = utilities;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -205,6 +216,7 @@
 				A97FB834231AD0DD00847EE2 /* API.swift in Sources */,
 				A97FB839231AE4C700847EE2 /* PostData.swift in Sources */,
 				A97FB829231ACE3700847EE2 /* Post.swift in Sources */,
+				A97FB85C231C3CF100847EE2 /* UIViewController+SimpleAlert.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

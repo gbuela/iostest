@@ -8,7 +8,7 @@
 
 import UIKit
 
-class MasterViewController: UIViewController, UISplitViewControllerDelegate {
+class MasterViewController: UIViewController {
     
     @IBOutlet private weak var tableView: UITableView!
     
@@ -18,8 +18,13 @@ class MasterViewController: UIViewController, UISplitViewControllerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = "Reddit Posts"
-        splitViewController?.preferredDisplayMode = .allVisible
+        splitViewController?.preferredDisplayMode = .primaryOverlay
         splitViewController?.delegate = self
+        
+        let refresh = UIRefreshControl()
+        refresh.addTarget(self, action: #selector(MasterViewController.doRefresh(_:)),
+                                  for: UIControl.Event.valueChanged)
+        tableView.addSubview(refresh)
         
         manager.fetch(type: .top) { result in
             self.reloadData(result: result)
@@ -31,13 +36,8 @@ class MasterViewController: UIViewController, UISplitViewControllerDelegate {
         case .success(_):
             tableView.reloadData()
         case .failure(let error):
-            alert(text: error.localizedDescription)
+            simpleAlert(text: error.localizedDescription)
         }
-    }
-
-    private func alert(text: String) {
-        let alertController = UIAlertController(title: nil, message: text, preferredStyle: .alert)
-        self.present(alertController, animated: true, completion: nil)
     }
 
     @IBAction private func dismissAllTapped() {
@@ -45,10 +45,19 @@ class MasterViewController: UIViewController, UISplitViewControllerDelegate {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        guard let detailVC = segue.destination as? DetailViewController else {
+        guard let index = tableView.indexPathForSelectedRow?.row,
+            let navVC = segue.destination as? UINavigationController,
+            let detailVC = navVC.viewControllers.first as? DetailViewController else {
             return
         }
-        print("showing detail") // FIXME: implement
+        detailVC.post = manager.posts[index]
+    }
+    
+    @objc private func doRefresh(_ refreshControl: UIRefreshControl) {
+        manager.fetch(type: .top) { result in
+            refreshControl.endRefreshing()
+            self.reloadData(result: result)
+        }
     }
 }
 
@@ -66,9 +75,9 @@ extension MasterViewController: UITableViewDataSource {
     }
 }
 
-// TODO: not performing segue automatically from storyboard connection
-// find out why and remove this
 extension MasterViewController: UITableViewDelegate {
+    // TODO: not performing segue automatically from storyboard connection
+    // find out why and remove this
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         performSegue(withIdentifier: "showDetail", sender: tableView)
     }
@@ -87,3 +96,14 @@ extension MasterViewController: UITableViewDelegate {
     }
 }
 
+extension MasterViewController: UISplitViewControllerDelegate {
+    // prevent displaying detail only when no item has been selected yet
+    func splitViewController(_ splitViewController: UISplitViewController, collapseSecondary secondaryViewController: UIViewController, onto primaryViewController: UIViewController) -> Bool {
+        guard let navVC = secondaryViewController as? UINavigationController,
+            let detailVC = navVC.viewControllers.first as? DetailViewController,
+            detailVC.post != nil else {
+                return true
+        }
+        return false
+    }
+}

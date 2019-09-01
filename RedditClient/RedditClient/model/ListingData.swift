@@ -9,6 +9,6 @@
 import Foundation
 
 struct ListingData: Decodable {
-    let after: String
+    let after: String?
     let children: [PostData]
 }
