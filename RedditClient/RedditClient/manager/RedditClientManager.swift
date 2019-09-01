@@ -23,6 +23,8 @@ class RedditClientManager {
     
     private let maxPosts = 50
     
+    private let persistence = Persistence()
+    
     private(set) var nextPageId: String?
     private(set) var posts: [Post] = []
     
@@ -86,5 +88,13 @@ class RedditClientManager {
     
     func dismissAll() {
         posts = []
+    }
+    
+    func isRead(post: Post) -> Bool {
+        return persistence.isRead(id: post.name)
+    }
+    
+    func setToRead(post: Post) {
+        persistence.addReadId(id: post.name)
     }
 }

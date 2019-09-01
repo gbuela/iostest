@@ -54,7 +54,12 @@ class MasterViewController: UIViewController {
             let detailVC = navVC.viewControllers.first as? DetailViewController else {
             return
         }
-        detailVC.post = manager.posts[index]
+        let post = manager.posts[index]
+        detailVC.post = post
+        if !manager.isRead(post: post) {
+            manager.setToRead(post: post)
+            tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+        }
     }
     
     @objc private func doRefresh(_ refreshControl: UIRefreshControl) {
@@ -75,7 +80,9 @@ extension MasterViewController: UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: postCellId, for: indexPath) as? PostCell else {
             return UITableViewCell()
         }
-        cell.post = manager.posts[indexPath.row]
+        let post = manager.posts[indexPath.row]
+        cell.post = post
+        cell.isRead = manager.isRead(post: post)
         cell.dismissHandler = { post in
             guard let index = self.manager.posts.firstIndex(where: {$0.name == post.name}) else { return }
             self.manager.dismissPost(index: index)

@@ -24,7 +24,11 @@ class PostCell: UITableViewCell {
             updateData()
         }
     }
-    
+    var isRead: Bool = false {
+        didSet {
+            readIndicator.isHidden = isRead
+        }
+    }
     var dismissHandler: ((Post) -> Void)?
     
     override func awakeFromNib() {
@@ -35,7 +39,7 @@ class PostCell: UITableViewCell {
     }
     
     private func updateData() {
-        // FIXME: handle read indicator
+        readIndicator.isHidden = isRead
         authorLabel.text = post?.author
         dateLabel.text = "\(post?.createdUtc ?? 0)" // FIXME: format date for display
         titleLabel.text = post?.title
