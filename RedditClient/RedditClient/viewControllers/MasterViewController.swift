@@ -12,6 +12,7 @@ class MasterViewController: UIViewController {
     
     @IBOutlet private weak var tableView: UITableView!
     
+    private let postCellId = "postCell"
     private let manager = RedditClientManager()
     private var fetchingNext = false
     
@@ -68,9 +69,10 @@ extension MasterViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        // FIXME: implement
-        let cell = UITableViewCell()
-        cell.textLabel?.text = manager.posts[indexPath.row].title
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: postCellId, for: indexPath) as? PostCell else {
+            return UITableViewCell()
+        }
+        cell.post = manager.posts[indexPath.row]
         return cell
     }
 }
