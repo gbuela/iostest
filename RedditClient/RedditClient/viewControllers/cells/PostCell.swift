@@ -25,6 +25,8 @@ class PostCell: UITableViewCell {
         }
     }
     
+    var dismissHandler: ((Post) -> Void)?
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         let selectionColorView = UIView()
@@ -74,7 +76,9 @@ class PostCell: UITableViewCell {
     }
     
     @IBAction private func dismissTapped() {
-        print("dismiss tapped") // FIXME: implement
+        if let post = post {
+            dismissHandler?(post)
+        }
     }
 }
 

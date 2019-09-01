@@ -42,7 +42,10 @@ class MasterViewController: UIViewController {
     }
 
     @IBAction private func dismissAllTapped() {
-        print("dismissAllTapped") // FIXME: implement
+        let indexesRange = 0..<(manager.posts.count)
+        let indexPaths = indexesRange.map { IndexPath(row: $0, section: 0) }
+        manager.dismissAll()
+        tableView.deleteRows(at: indexPaths, with: .automatic)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -73,6 +76,11 @@ extension MasterViewController: UITableViewDataSource {
             return UITableViewCell()
         }
         cell.post = manager.posts[indexPath.row]
+        cell.dismissHandler = { post in
+            guard let index = self.manager.posts.firstIndex(where: {$0.name == post.name}) else { return }
+            self.manager.dismissPost(index: index)
+            tableView.deleteRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+        }
         return cell
     }
 }

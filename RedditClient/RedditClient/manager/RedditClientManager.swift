@@ -79,4 +79,12 @@ class RedditClientManager {
             return .next(after: pageId, count: maxPosts - posts.count)
         }
     }
+    
+    func dismissPost(index: Int) {
+        posts.remove(at: index)
+    }
+    
+    func dismissAll() {
+        posts = []
+    }
 }
